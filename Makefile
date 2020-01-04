@@ -1,7 +1,7 @@
 NAME=libprintf.a
 
 SRCS_PATH=./srcs/
-SRCS_FILES=ft_printf.c
+SRCS_FILES=ft_printf.c precision.c
 SRCS=$(addprefix $(SRCS_PATH), $(SRCS_FILES))
 
 OBJECTS_PATH=./objs/
