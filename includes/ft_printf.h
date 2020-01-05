@@ -39,5 +39,8 @@ typedef struct	s_str
 int		ft_printf(const char *format, ...);
 t_str 	*prescision(int precision, double num);
 t_str 	*width(int wid, int sign, ULLI num);
-t_str	*makeStr(ULLI num, int size, int sign, int maxsize);
+t_str	*makeStr(ULLI num, int size, int sign);
+t_str	*typeFloat(t_format *format);
+char	*ft_strjoin_tofirst(char *s1, const char *s2);
+char	*ft_strjoin_tosecond(const char *s1, char *s2);
 #endif //PRINTF_H

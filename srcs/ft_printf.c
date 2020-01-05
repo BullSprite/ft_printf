@@ -5,9 +5,13 @@ int	ft_printf(const char *format, ...)
 	va_list ap;
 
 	va_start(ap, format);
-	t_flag *a = ft_memalloc(sizeof(t_flag));
-	a->pres = 4;
-	a->data = "abcde";
-	a->length = "s";
-	return (prescision(a));
+	t_format *f = ft_memalloc(sizeof(t_format));
+	f->length = "f";
+	f->precision = 200;
+	f->width = 10;
+	f->data = ap;
+	t_str *str = typeFloat(f);
+	ft_putstr(str->str);
+	va_end(ap);
+	return (str->length);
 }

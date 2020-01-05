@@ -1,11 +1,11 @@
 #include "../includes/ft_printf.h"
 
-t_str *makeStr(ULLI num, int size, int sign, int maxsize)
+t_str *makeStr(ULLI num, int size, int sign)
 {
 	t_str	*str;
 	size_t	i;
 
-	if (num < 10 || (maxsize != -1 && size == maxsize))
+	if (num < 10)
 	{
 		if (!(str =  (t_str *)ft_memalloc(sizeof(t_str))))
 			return (NULL);
@@ -14,11 +14,11 @@ t_str *makeStr(ULLI num, int size, int sign, int maxsize)
 			free(str);
 			return (str = NULL);
 		}
-		str->length = size + sign;
+		str->length = size + sign + 1;
 		if (sign == 1)
 			str->str[0] = '-';
 	}
-	else if (!(str = makeStr(num / 10, size + 1)))
+	else if (!(str = makeStr(num / 10, size + 1, sign)))
 		return (NULL);
 	i = 0;
 	while ((str->str)[i])
@@ -32,14 +32,24 @@ t_str *prescision(int precision, double num)
 	int		i;
 	ULLI	res;
 	ULLI	dpow;
+	t_str	*str;
+	char 	*tmp;
 
 	if (num < 0)
 		num *= -1;
 	num -= (int)num;
 	i = -1;
 	dpow = 1;
-	while (++i < precision && (num * dpow) != (ULLI)(num * dpow))
+	while (++i < (precision > 19? 19 : precision))
 		dpow *= 10;
 	res = (ULLI)(num * dpow + 0.5);
-	return(makeStr(res, 0, 0, -1));
+	str = makeStr(res, 0, 0);
+	while (str->length < precision)
+	{
+		tmp = str->str;
+		str->str = ft_strjoin(str->str, "0");
+		free(tmp);
+		str->length++;
+	}
+	return(str);
 }
