@@ -50,7 +50,7 @@ char *ft_strjoin_tosecond(const char *s1, char *s2)
 	return (res);
 }
 
-t_str	*typeFloat(t_format *format)
+t_str	*type_float(t_format *format)
 {
 	float	num;
 	t_str	*wid;

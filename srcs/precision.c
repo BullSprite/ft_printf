@@ -1,6 +1,6 @@
 #include "../includes/ft_printf.h"
 
-t_str *makeStr(ULLI num, int size, int sign)
+t_str *make_str(ULLI num, int size, int sign)
 {
 	t_str	*str;
 	size_t	i;
