@@ -10,7 +10,7 @@ int	ft_printf(const char *format, ...)
 	f->precision = 200;
 	f->width = 10;
 	f->data = ap;
-	t_str *str = typeFloat(f);
+	t_str *str = type_float(f);
 	ft_putstr(str->str);
 	va_end(ap);
 	return (str->length);

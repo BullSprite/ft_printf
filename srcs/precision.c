@@ -18,7 +18,7 @@ t_str *make_str(ULLI num, int size, int sign)
 		if (sign == 1)
 			str->str[0] = '-';
 	}
-	else if (!(str = makeStr(num / 10, size + 1, sign)))
+	else if (!(str = make_str(num / 10, size + 1, sign)))
 		return (NULL);
 	i = 0;
 	while ((str->str)[i])
@@ -43,7 +43,7 @@ t_str *prescision(int precision, double num)
 	while (++i < (precision > 19? 19 : precision))
 		dpow *= 10;
 	res = (ULLI)(num * dpow + 0.5);
-	str = makeStr(res, 0, 0);
+	str = make_str(res, 0, 0);
 	while (str->length < precision)
 	{
 		tmp = str->str;
