@@ -1,6 +1,6 @@
 #include "../includes/ft_printf.h"
 
-t_str *make_str(ULLI num, int size, int sign)
+t_str *num_to_str(ULLI num, int size)
 {
 	t_str	*str;
 	size_t	i;
@@ -9,16 +9,14 @@ t_str *make_str(ULLI num, int size, int sign)
 	{
 		if (!(str =  (t_str *)ft_memalloc(sizeof(t_str))))
 			return (NULL);
-		if (!(str->str = (char *)ft_memalloc(size + 1 + sign)))
+		if (!(str->str = (char *)ft_memalloc(size + 1)))
 		{
 			free(str);
 			return (str = NULL);
 		}
-		str->length = size + sign + 1;
-		if (sign == 1)
-			str->str[0] = '-';
+		str->length = size + 1;
 	}
-	else if (!(str = make_str(num / 10, size + 1, sign)))
+	else if (!(str = num_to_str(num / 10, size + 1)))
 		return (NULL);
 	i = 0;
 	while ((str->str)[i])
@@ -43,7 +41,7 @@ t_str *prescision(int precision, double num)
 	while (++i < (precision > 19? 19 : precision))
 		dpow *= 10;
 	res = (ULLI)(num * dpow + 0.5);
-	str = make_str(res, 0, 0);
+	str = num_to_str(res, 0);
 	while (str->length < precision)
 	{
 		tmp = str->str;

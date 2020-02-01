@@ -53,28 +53,18 @@ char *ft_strjoin_tosecond(const char *s1, char *s2)
 t_str	*type_float(t_format *format)
 {
 	float	num;
-	t_str	*wid;
 	t_str	*pre;
 	t_str	*str;
 	char	*st;
 
 	num = va_arg(*(format->data), double);
-	wid = width(format->width, num < 0 ? 1 : 0, (ULLI)(num < 0 ? -num : num));
 	pre = prescision(format->precision, num);
 	str = (t_str*)ft_memalloc(sizeof(t_str));
-	str->str = ft_strjoin(wid->str, ".");
-	free(wid->str);
-	wid->str = str->str;
+	str->str = ft_strjoin(num_to_str((ULLI)(num < 0 ? -num : num),
+			format->width), '.');
 	str->str = ft_strjoin(str->str, pre->str);
-	free(wid->str);
 	free(pre->str);
-	str->length = wid->length + 1 + pre->length;
-	free(wid);
+	str->length = 1 + pre->length;
 	free(pre);
-	while (str->length < format->width)
-	{
-		str->length++;
-		str->str = ft_strjoin_tosecond(" ", str->str);
-	}
 	return (str);
 }
