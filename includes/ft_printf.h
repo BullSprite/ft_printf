@@ -38,9 +38,8 @@ typedef struct	s_str
 }				t_str;
 
 int		ft_printf(const char *format, ...);
-t_str 	*prescision(int precision, double num);
-t_str	*num_to_str(ULLI num, int size);
-t_str	*type_float(t_format *format);
+t_str 	prescision(int precision, double num);
+t_str	num_to_str(ULLI num, int size);
 char	*ft_strjoin_tofirst(char *s1, const char *s2);
 char	*ft_strjoin_tosecond(const char *s1, char *s2);
 t_str	print_int(t_format *format);

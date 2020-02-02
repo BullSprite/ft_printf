@@ -120,13 +120,15 @@ void validate_flags(t_format *format)
         format->flags_set &= TRUE_MASK - FLAGS_ZERO;
         format->flags_set &= TRUE_MASK - FLAGS_HASH;
     }
+    if (ft_strchr("pdiuoxX", format->conversion) && format->precision > -1)
+		format->flags_set &= TRUE_MASK - FLAGS_ZERO;
     if (ft_strchr("oxX", format->conversion))
     {
         format->flags_set &= TRUE_MASK - FLAGS_SPACE;
         format->flags_set &= TRUE_MASK - FLAGS_PLUS;
         format->flags_set &= TRUE_MASK - FLAGS_ZERO;
     }
-    if (format->flags_set & FLAGS_MINUS || format->precision > -1)
+    if (format->flags_set & FLAGS_MINUS)
         format->flags_set &= TRUE_MASK - FLAGS_ZERO;
     if (format->flags_set & FLAGS_PLUS)
         format->flags_set &= TRUE_MASK - FLAGS_SPACE;

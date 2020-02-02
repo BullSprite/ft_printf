@@ -1,53 +1,53 @@
 #include "../includes/ft_printf.h"
 
-t_str *num_to_str(ULLI num, int size)
+t_str num_to_str(ULLI num, int size)
 {
-	t_str	*str;
+	t_str	str;
 	size_t	i;
 
 	if (num < 10)
 	{
-		if (!(str =  (t_str *)ft_memalloc(sizeof(t_str))))
-			return (NULL);
-		if (!(str->str = (char *)ft_memalloc(size + 1)))
+		if (!(str.str = (char *)ft_memalloc(size + 2)))
 		{
-			free(str);
-			return (str = NULL);
+			str.str = NULL;
+			str.length = -1;
+			return (str);
 		}
-		str->length = size + 1;
+		str.length = size + 1;
 	}
-	else if (!(str = num_to_str(num / 10, size + 1)))
-		return (NULL);
+	else
+	{
+		str = num_to_str(num / 10, size + 1);
+		if (!str.str)
+			return (str);
+	}
 	i = 0;
-	while ((str->str)[i])
+	while ((str.str)[i])
 		i++;
-	str->str[i] = num % 10 + '0';
+	str.str[i] = num % 10 + '0';
 	return (str);
 }
 
-t_str *prescision(int precision, double num)
+t_str prescision(int precision, double num)
 {
 	int		i;
 	ULLI	res;
 	ULLI	dpow;
-	t_str	*str;
-	char 	*tmp;
+	t_str	str;
 
 	if (num < 0)
 		num *= -1;
 	num -= (int)num;
 	i = -1;
 	dpow = 1;
-	while (++i < (precision > 19? 19 : precision))
-		dpow *= 10;
+	if (num != 0)
+		while (++i < (precision > 19? 19 : precision))
+			dpow *= 10;
 	res = (ULLI)(num * dpow + 0.5);
 	str = num_to_str(res, 0);
-	while (str->length < precision)
-	{
-		tmp = str->str;
-		str->str = ft_strjoin(str->str, "0");
-		free(tmp);
-		str->length++;
-	}
+	if (str.length != -1 && precision - str.length > 0)
+		clean_strjoin_right(&(str.str), 1, make_str(precision - str.length, '0'));
+	if (str.length < precision)
+		str.length = precision;
 	return(str);
 }

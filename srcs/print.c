@@ -211,12 +211,3 @@ t_str print_pointer(t_format *format)
     pointer_to_str(to_print, &ret);
     return (ret);
 }
-
-t_str print_float(t_format *format)
-{
-    long to_print;
-    t_str ret;
-
-    to_print = va_arg(*(format->data), int);
-    return (ret);
-}
