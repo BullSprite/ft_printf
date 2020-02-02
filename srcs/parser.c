@@ -62,7 +62,11 @@ char    *handle_width(char *c, t_format *format, s_utils *s)
 {
     if (*c == '*')
     {
-        format->width = va_arg(*(format->data), int);
+        if ((format->width = va_arg(*(format->data), int)) < 0)
+		{
+        	format->width *= -1;
+        	format->flags_set |= FLAGS_MINUS;
+		}
         format->flags_set |= FLAGS_STAR;
         s->first_star = c;
     }
@@ -77,9 +81,15 @@ char    *handle_width(char *c, t_format *format, s_utils *s)
     return (++c);
 }
 
-char    *handle_precision(char *c, t_format *format)
+char    *handle_precision(char *c, t_format *format, s_utils *s)
 {
-    if (*c >= '0' && *c <= '9')
+	if (*c == '*')
+	{
+		format->precision = va_arg(*(format->data), int);
+		format->flags_set |= FLAGS_STAR;
+		s->first_star = c;
+	}
+	else if (*c >= '0' && *c <= '9')
     {
         //temp solution
         format->precision = ft_atoi(c);
@@ -178,6 +188,7 @@ void handle_sign(t_format *format, t_str *str)
     || str->sign == '-')
         (str->length)++;
 }
+
 //right part - integer with or without sign
 //left part - width with or without sign
 int print_flags(t_format *format)
@@ -191,20 +202,20 @@ int print_flags(t_format *format)
     handle_sign(format, &ret);
     if (format->flags_set & FLAGS_MINUS)
     {
-        if (format->width != -1 && (format->width - ret.length) > 0)
+        if (format->width > -1 && (format->width - ret.length) > 0)
             clean_strjoin_right(&(p.right_part), 1,
                           make_str(format->width - ret.length, ' '));
     }
-    else
-    {
-        if (format->width != -1 && (format->width - ret.length) > 0)
+    else if (format->width > -1 && (format->width - ret.length) > 0)
             clean_strjoin_right(&(p.left_part), 1,
                                make_str(format->width - ret.length,
                                         format->flags_set & FLAGS_ZERO ? '0' : ' '));
-    }
+
     append_sign(&p, &ret, format);
     ret.length += (format->width - ret.length) > 0 ? format->width - ret.length : 0;
     write(1, p.left_part, ft_strlen(p.left_part));
+    if ((ret.null_term) && format->conversion == 'c')
+    	write(1, "\0", 1);
     write(1, p.right_part, ft_strlen(p.right_part));
     return (ret.length);
 }
@@ -253,7 +264,7 @@ char *pre_parse(char *to_parse, t_format *format, s_utils *utils)
     if ((*to_parse >= '0' && *to_parse <= '9') || *to_parse == '*')
         to_parse = handle_width(to_parse, format, utils);
     if (*to_parse == '.')
-        to_parse = handle_precision(++to_parse, format);
+        to_parse = handle_precision(++to_parse, format, utils);
 
     return (to_parse);
 }

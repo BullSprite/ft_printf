@@ -37,15 +37,16 @@ void int_to_base(unsigned long long n, char base, t_str *res)
     char *base_str;
 
     base_str = "0123456789ABCDEF";
-    len = int_len(n, base);
+    len = n == 0 ? 1 : int_len(n, base);
     res->str = ft_strnew(len);
     res->length = len;
-    while(n > 0)
+    while(n > base)
     {
         res->str[len - 1] = base_str[n % base];
         len--;
         n /= base;
     }
+	res->str[len - 1] = base_str[n % base];
 }
 
 void pointer_to_str(size_t n, t_str *res)
@@ -120,14 +121,11 @@ void *handle_length(t_format *format)
 
 void handle_int_precision(t_format *format, t_str *in)
 {
-    size_t len;
-
-    len = ft_strlen(in->str);
-    if (format->precision > len)
+    if ((format->precision) > (in->length))
     {
         clean_strjoin_left(&(in->str), 1,
-                make_str(format->precision - len, '0'));
-        in->length += format->precision - len;
+                make_str(format->precision - in->length, '0'));
+        in->length += format->precision - in->length;
     }
 }
 
@@ -135,7 +133,7 @@ void handle_str_precision(t_format *format, t_str *in)
 {
     size_t len;
 
-    len = ft_strlen(in->str);
+    len = format->conversion == 'c' ? 1 : ft_strlen(in->str);
     if (format->precision < len && format->precision >= 0)
     {
         (in->str)[format->precision] = 0;
@@ -167,7 +165,7 @@ t_str print_int(t_format *format)
         return (print_unsigned(format));
     base = set_base(format->conversion);
     to_print = *(long long *)handle_length(format);
-    ret.sign = to_print > 0 ? '+' : '-';
+    ret.sign = to_print >= 0 ? '+' : '-';
     int_to_base(to_print > 0 ? to_print : -1*to_print, base, &ret);
     if (format->conversion == 'x')
         to_lower_str(ret.str);
@@ -187,15 +185,19 @@ t_str print_string(t_format *format)
 {
     char *to_print;
     t_str ret;
+
+    ret.null_term = 0;
     if (format->conversion == 'c')
     {
         to_print = ft_strnew(1);
-        to_print[0] = va_arg(*(format->data), int);
+        if (!(to_print[0] = va_arg(*(format->data), int)))
+        	ret.null_term = 1;
         ret.str = to_print;
     }
     else
     {
-        to_print = va_arg(*(format->data), char *);
+        if (!(to_print = va_arg(*(format->data), char *)))
+        	to_print = "(null)";
         ret.str = ft_strdup(to_print);
     }
     handle_str_precision(format, &ret);
@@ -207,7 +209,12 @@ t_str print_pointer(t_format *format)
     size_t to_print;
     t_str ret;
 
-    to_print = va_arg(*(format->data), size_t);
-    pointer_to_str(to_print, &ret);
+    if (!(to_print = va_arg(*(format->data), size_t)))
+	{
+    	ret.str = ft_strdup("(nil)");
+    	ret.length = ft_strlen(ret.str);
+	}
+    else
+    	pointer_to_str(to_print, &ret);
     return (ret);
 }

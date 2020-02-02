@@ -22,8 +22,8 @@
 //http://www.cplusplus.com/reference/cstdio/printf/
 
 typedef struct		s_format {
-	int				width;
-	int				precision;
+	long			width;
+	long			precision;
 	char			conversion;
 	char			*length;
 	va_list			*data;
@@ -35,13 +35,12 @@ typedef struct	s_str
 	char 		*str;
 	int 		length;
 	char		sign;
+	char		null_term;
 }				t_str;
 
 int		ft_printf(const char *format, ...);
 t_str 	prescision(int precision, double num);
 t_str	num_to_str(ULLI num, int size);
-char	*ft_strjoin_tofirst(char *s1, const char *s2);
-char	*ft_strjoin_tosecond(const char *s1, char *s2);
 t_str	print_int(t_format *format);
 t_str	print_float(t_format *format);
 t_str	print_string(t_format *format);
