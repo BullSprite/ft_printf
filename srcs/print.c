@@ -40,7 +40,7 @@ void int_to_base(unsigned long long n, char base, t_str *res)
     len = n == 0 ? 1 : int_len(n, base);
     res->str = ft_strnew(len);
     res->length = len;
-    while(n > base)
+    while(n >= base)
     {
         res->str[len - 1] = base_str[n % base];
         len--;
@@ -92,12 +92,12 @@ void *handle_unsigned_length(t_format *format)
     else if (ft_strequ(format->length, "hh"))
         u_n = (unsigned char)va_arg(*(format->data), unsigned int);
     else
-        u_n = (unsigned int)va_arg(*(format->data), unsigned int);
+        u_n = (unsigned long long)va_arg(*(format->data), unsigned int);
     ft_memmove(ret, &u_n, sizeof(long long));
     return (ret);
 }
 
-void *handle_length(t_format *format)
+void *handle_length(t_format *format) // x
 {
     void *ret;
     long long n;
@@ -111,22 +111,44 @@ void *handle_length(t_format *format)
         n = (short)va_arg(*(format->data), int);
     else if (ft_strequ(format->length, "hh"))
         n = (char)va_arg(*(format->data), int);
-    else
-        n = (int)va_arg(*(format->data), int);
+    else if ((n = (long long)va_arg(*(format->data), unsigned int)) != 4294967295)
+            n = (int)n;
     ft_memmove(ret, &n, sizeof(long long));
     return (ret);
 }
 
 //does not work now
 
-void handle_int_precision(t_format *format, t_str *in)
+int handle_int_precision(t_format *format, t_str *in)
 {
+    if (!(format->precision) && (in->str[0]) == '0')
+    {
+        in->length = 0;
+        free(in->str);
+
+        if (!(in->str = ft_strnew(1)))
+            return (0);
+        if (format->conversion == 'o' && format->flags_set & FLAGS_HASH)
+        {
+            in->length = 1;
+            in->str[0] = '0';
+        }
+        return (0);
+    }
+    if (format->conversion == 'o' && (format->flags_set & FLAGS_HASH))
+    {
+        clean_strjoin_left(&(in->str), 1,
+                           make_str(1, '0'));
+        in->length += 1;
+        //format->precision -= 1;
+    }
     if ((format->precision) > (in->length))
     {
         clean_strjoin_left(&(in->str), 1,
                 make_str(format->precision - in->length, '0'));
         in->length += format->precision - in->length;
     }
+    return (format->conversion == 'o' ? 0 : 1);
 }
 
 void handle_str_precision(t_format *format, t_str *in)
@@ -161,6 +183,7 @@ t_str print_int(t_format *format)
     int base;
     t_str ret;
 
+
     if (format->conversion == 'u')
         return (print_unsigned(format));
     base = set_base(format->conversion);
@@ -169,15 +192,15 @@ t_str print_int(t_format *format)
     int_to_base(to_print > 0 ? to_print : -1*to_print, base, &ret);
     if (format->conversion == 'x')
         to_lower_str(ret.str);
-    handle_int_precision(format, &ret);
-    if (format->flags_set & FLAGS_HASH && ft_strchr("oxX", format->conversion))
-    {
-        if (format->conversion == 'o')
-            clean_strjoin_left(&(ret.str), 1, ft_strdup("0"));
-        else
-            clean_strjoin_left(&(ret.str), 1, ft_strdup("0x"));
-        ret.length += format->conversion == 'o' ? 1 : 2;
-    }
+    if (handle_int_precision(format, &ret))
+        if (format->flags_set & FLAGS_HASH && ft_strchr("oxX", format->conversion))
+        {
+            if (format->conversion == 'o')
+                clean_strjoin_left(&(ret.str), 1, ft_strdup("0"));
+            else
+                clean_strjoin_left(&(ret.str), 1, ft_strdup("0x"));
+            ret.length += format->conversion == 'o' ? 1 : 2;
+        }
     return (ret);
 }
 

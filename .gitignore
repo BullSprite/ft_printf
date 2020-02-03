@@ -1,0 +1,9 @@
+main.c
+objs
+cmake-build-debug
+CMakeLists.txt
+libprintf.a
+*.out
+*.o
+.idea
+*~

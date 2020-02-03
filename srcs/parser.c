@@ -264,8 +264,13 @@ char *pre_parse(char *to_parse, t_format *format, s_utils *utils)
     if ((*to_parse >= '0' && *to_parse <= '9') || *to_parse == '*')
         to_parse = handle_width(to_parse, format, utils);
     if (*to_parse == '.')
+    {
+        if (format->width == -1)
+            format->width = 0;
         to_parse = handle_precision(++to_parse, format, utils);
-
+        if (format->precision == -1)
+            format->precision = 0;
+    }
     return (to_parse);
 }
 int parse(char *to_parse, t_format *format, va_list *va, s_utils *utils)
