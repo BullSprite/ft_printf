@@ -110,8 +110,8 @@ void *handle_length(t_format *format) // x
         n = (short)va_arg(*(format->data), int);
     else if (ft_strequ(format->length, "hh"))
         n = (char)va_arg(*(format->data), int);
-    else if ((n = (long long)va_arg(*(format->data), unsigned int)) != 4294967295)
-            n = (int)n;
+    else
+        n = (long long)va_arg(*(format->data), int);
     ft_memmove(ret, &n, sizeof(long long));
     return (ret);
 }
@@ -161,7 +161,14 @@ void handle_str_precision(t_format *format, t_str *in)
 {
     size_t len;
 
-    len = format->conversion == 'c' ? 1 : ft_strlen(in->str);
+    if (format->conversion == 'c')
+    {
+        in->length = 1;
+        if (!(in->str[0]))
+            return ;
+    }
+    else
+        len = ft_strlen(in->str);
     if (format->precision < len && format->precision >= 0)
     {
         (in->str)[format->precision] = 0;
