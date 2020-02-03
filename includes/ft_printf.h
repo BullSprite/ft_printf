@@ -39,7 +39,7 @@ typedef struct	s_str
 }				t_str;
 
 int		ft_printf(const char *format, ...);
-t_str 	prescision(int precision, double num);
+t_str 	prescision(int precision, long double num);
 t_str	num_to_str(ULLI num, int size);
 t_str	print_int(t_format *format);
 t_str	print_float(t_format *format);

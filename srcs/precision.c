@@ -28,7 +28,7 @@ t_str num_to_str(ULLI num, int size)
 	return (str);
 }
 
-t_str prescision(int precision, double num)
+t_str prescision(int precision, long double num)
 {
 	int		i;
 	ULLI	res;
@@ -37,7 +37,7 @@ t_str prescision(int precision, double num)
 
 	if (num < 0)
 		num *= -1;
-	num -= (int)num;
+	num -= (ULLI)num;
 	i = -1;
 	dpow = 1;
 	if (num != 0)
