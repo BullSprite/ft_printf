@@ -27,6 +27,7 @@ typedef struct s_s {
     int count;
     int error;
     char *first_star;
+    int only_spaces;
 } s_utils;
 typedef struct t_a {
     char *left_part;
@@ -136,7 +137,6 @@ void validate_flags(t_format *format)
     {
         format->flags_set &= TRUE_MASK - FLAGS_SPACE;
         format->flags_set &= TRUE_MASK - FLAGS_PLUS;
-        format->flags_set &= TRUE_MASK - FLAGS_ZERO;
     }
     if (format->flags_set & FLAGS_MINUS)
         format->flags_set &= TRUE_MASK - FLAGS_ZERO;
@@ -248,6 +248,7 @@ char    *handle_conversion(char *c, t_format *format, s_utils *s)
 
 char *pre_parse(char *to_parse, t_format *format, s_utils *utils)
 {
+    utils->only_spaces = 1;
     if (*to_parse == '%')
     {
         utils->count++;
@@ -258,7 +259,18 @@ char *pre_parse(char *to_parse, t_format *format, s_utils *utils)
     while (1)
         if (*to_parse == '#' || *to_parse == '-' || *to_parse == '+'
         || *to_parse == ' ' || *to_parse == '0')
+        {
+            if (*to_parse != ' ')
+                utils->only_spaces = 0;
             to_parse = handle_flag(to_parse, format);
+        }
+        else if (*to_parse == '%' && utils->only_spaces)
+        {
+            utils->count++;
+            utils->error = 1;
+            write(1, to_parse++, 1);
+            return (to_parse);
+        }
         else
             break ;
     if ((*to_parse >= '0' && *to_parse <= '9') || *to_parse == '*')
