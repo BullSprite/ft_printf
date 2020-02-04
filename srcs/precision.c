@@ -32,19 +32,23 @@ t_str prescision(int precision, long double num)
 {
 	int		i;
 	ULLI	res;
-	ULLI	dpow;
 	t_str	str;
+	int		zero_count;
 
-	if (num < 0)
-		num *= -1;
 	num -= (ULLI)num;
+	zero_count = 0;
 	i = -1;
-	dpow = 1;
 	if (num != 0)
-		while (++i < (precision > 19? 19 : precision))
-			dpow *= 10;
-	res = (ULLI)(num * dpow + 0.5);
+		while (++i < (precision > 20? 20 : precision))
+			if ((ULLI)((num *= 10) + 0.00000003) == 0)
+				zero_count++;
+	res = (ULLI)(num + 0.5);
 	str = num_to_str(res, 0);
+	if (str.str && zero_count != 0 && (ULLI)(num + 0.5) > 0)
+	{
+		clean_strjoin_left(&(str.str), 1, make_str(zero_count, '0'));
+		str.length += zero_count;
+	}
 	if (str.length != -1 && precision - str.length > 0)
 		clean_strjoin_right(&(str.str), 1, make_str(precision - str.length, '0'));
 	if (str.length < precision)

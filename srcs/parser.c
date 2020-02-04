@@ -42,6 +42,7 @@ void clear_format(t_format *f)
     f->flags_set = 0;
     f->data = NULL;
     f->conversion = 0;
+	f->hex_zero = 0;
 }
 
 char    *handle_flag(char *c, t_format *format)
@@ -133,11 +134,22 @@ void validate_flags(t_format *format)
     }
     if (ft_strchr("pdiuoxX", format->conversion) && format->precision > -1)
 		format->flags_set &= TRUE_MASK - FLAGS_ZERO;
-    if (ft_strchr("oxX", format->conversion))
+    if (ft_strchr("oxXu", format->conversion))
     {
         format->flags_set &= TRUE_MASK - FLAGS_SPACE;
         format->flags_set &= TRUE_MASK - FLAGS_PLUS;
     }
+    if ((format->conversion == 'p'
+    || (ft_strchr("xX", format->conversion)
+    && format->flags_set & FLAGS_HASH))
+    && format->precision == -1
+    && format->flags_set & FLAGS_ZERO
+    && !(format->flags_set & FLAGS_MINUS))
+	{
+    	format->precision = format->width - 2;
+		format->hex_zero = 1;
+    	format->width = -1;
+	}
     if (format->flags_set & FLAGS_MINUS)
         format->flags_set &= TRUE_MASK - FLAGS_ZERO;
     if (format->flags_set & FLAGS_PLUS)
@@ -210,7 +222,6 @@ int print_flags(t_format *format)
             clean_strjoin_right(&(p.left_part), 1,
                                make_str(format->width - ret.length,
                                         format->flags_set & FLAGS_ZERO ? '0' : ' '));
-
     append_sign(&p, &ret, format);
     ret.length += (format->width - ret.length) > 0 ? format->width - ret.length : 0;
     write(1, p.left_part, ft_strlen(p.left_part));
@@ -219,7 +230,6 @@ int print_flags(t_format *format)
     write(1, p.right_part, ft_strlen(p.right_part));
     return (ret.length);
 }
-
 
 char    *handle_conversion(char *c, t_format *format, s_utils *s)
 {
@@ -303,7 +313,7 @@ int parse(char *to_parse, t_format *format, va_list *va, s_utils *utils)
         format->data = va;
         start = (char *)to_parse++;
         to_parse = pre_parse(to_parse, format, utils);
-        if (utils->error)
+        if (utils->error || !to_parse)
             continue ;
         to_parse = handle_conversion(to_parse, format, utils);
         if (utils->error)
@@ -341,7 +351,7 @@ size_t ft_strnlen(const char *str, size_t maxlen)
 
 int ft_printf(const char* format, ...)
 {
-    va_list va;
+	va_list va;
     int ret;
     t_format f;
     s_utils utils;
@@ -350,7 +360,7 @@ int ft_printf(const char* format, ...)
     utils.error = 0;
     va_start(va, format);
     if (ft_strnlen(format, 2) == 1 && *format == '%')
-        ret = -1;
+        ret = 0;
     else
         ret = parse((char *)format, &f, &va, &utils);
     va_end(va);

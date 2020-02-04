@@ -28,6 +28,7 @@ typedef struct		s_format {
 	char			*length;
 	va_list			*data;
 	unsigned int 	flags_set;
+	char			hex_zero;
 }					t_format;
 
 typedef struct	s_str

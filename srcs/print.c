@@ -116,10 +116,15 @@ void *handle_length(t_format *format) // x
     return (ret);
 }
 
-//does not work now
+void handle_hex(t_format *format, t_str *in)
+{
+	if ((in->str[0]) == '0' && format->hex_zero)
+		format->precision += 2;
+}
 
 int handle_int_precision(t_format *format, t_str *in)
 {
+	handle_hex(format, in);
     if (!(format->precision) && (in->str[0]) == '0')
     {
         in->length = 0;
@@ -148,6 +153,7 @@ int handle_int_precision(t_format *format, t_str *in)
             in->length += 1;
         }
     }
+
     if ((format->precision) > (in->length))
     {
         clean_strjoin_left(&(in->str), 1,
@@ -164,6 +170,7 @@ void handle_str_precision(t_format *format, t_str *in)
     if (format->conversion == 'c')
     {
         in->length = 1;
+        len = 1;
         if (!(in->str[0]))
             return ;
     }
@@ -248,7 +255,16 @@ t_str print_pointer(t_format *format)
 
     if (!(to_print = va_arg(*(format->data), size_t)))
 	{
-    	ret.str = ft_strdup("(nil)");
+		if (format->precision > 0 || format->precision == -1)
+		{
+			ret.str = ft_strdup("0");
+			ret.length = 1;
+			handle_int_precision(format, &ret);
+			clean_strjoin_left(&(ret.str), 1, ft_strdup("0x"));
+			ret.length += 2;
+		}
+		else
+    		ret.str = ft_strdup("0x");
     	ret.length = ft_strlen(ret.str);
 	}
     else

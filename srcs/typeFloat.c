@@ -5,16 +5,34 @@ t_str	print_float(t_format *format)
 	long double	num;
 	t_str		pre;
 	t_str		str;
+	char		sign;
 
 	if (format->precision == -1)
 		format->precision = 6;
-	if (!ft_strcmp("L", format->length))
+	if ((format->length) && !ft_strcmp("L", format->length))
 		num = va_arg(*(format->data), long double);
 	else
 		num = va_arg(*(format->data), double);
+	sign = num < 0 ? '-' : '+';
+	num = num < 0 ? -num : num;
+	if (format->precision == 0)
+	{
+		str = num_to_str(num + 0.5, (format->flags_set & FLAGS_HASH) ? 1 : 0);
+		if (format->flags_set & FLAGS_HASH)
+			str.str[str.length - 1] = '.';
+		str.sign = sign;
+		return (str);
+	}
 	pre = prescision(format->precision, num);
+	if (pre.length > format->precision && (pre.str)[0] == '1')
+	{
+		(pre.str)[0] = '0';
+		num += 1;
+		pre.length--;
+		(pre.str)[pre.length] = 0;
+	}
 	str = num_to_str((ULLI)(num < 0 ? -num : num), 1);
-	str.sign = num < 0 ? '-' : '+';
+	str.sign = sign;
 	str.str[str.length - 1] = '.';
 	clean_strjoin_right(&(str.str), 1, pre.str);
 	str.length += pre.length;
