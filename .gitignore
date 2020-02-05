@@ -6,4 +6,5 @@ libprintf.a
 *.out
 *.o
 .idea
-*~
+*~pft/
+pft

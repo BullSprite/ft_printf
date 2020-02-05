@@ -80,7 +80,7 @@ char    *handle_width(char *c, t_format *format, s_utils *s)
             ++c;
         return (c);
     }
-    return (++c);
+	return (*c ? ++c : c);
 }
 
 char    *handle_precision(char *c, t_format *format, s_utils *s)
@@ -101,7 +101,7 @@ char    *handle_precision(char *c, t_format *format, s_utils *s)
     }
     else
         return (c);
-    return (++c);
+    return (*c ? ++c : c);
 }
 
 t_str print_conversion(t_format *format)
@@ -118,6 +118,8 @@ t_str print_conversion(t_format *format)
         res = print_pointer(format);
     else if(format->conversion == 'f')
         res = print_float(format);
+    else if(format->conversion == '%')
+    	res = print_percent(format);
     return (res);
 
 }
@@ -125,14 +127,14 @@ t_str print_conversion(t_format *format)
 
 void validate_flags(t_format *format)
 {
-    if (!ft_strchr("fpdiuoxX", format->conversion))
+    if (!ft_strchr("fpdiuoxX%", format->conversion))
     {
         format->flags_set &= TRUE_MASK - FLAGS_SPACE;
         format->flags_set &= TRUE_MASK - FLAGS_PLUS;
         format->flags_set &= TRUE_MASK - FLAGS_ZERO;
         format->flags_set &= TRUE_MASK - FLAGS_HASH;
     }
-    if (ft_strchr("pdiuoxX", format->conversion) && format->precision > -1)
+    if (ft_strchr("pdiuoxX%", format->conversion) && format->precision > -1)
 		format->flags_set &= TRUE_MASK - FLAGS_ZERO;
     if (ft_strchr("oxXu", format->conversion))
     {
@@ -244,7 +246,7 @@ char    *handle_conversion(char *c, t_format *format, s_utils *s)
         len = ft_strnew(c - start);
         ft_strncpy(len, start, c - start);
     }
-    if(!strchr("fcspdiouxX", *c))
+    if(!strchr("fcspdiouxX%", *c))
     {
         (s->error) = 1;
         return (++c);
@@ -313,7 +315,7 @@ int parse(char *to_parse, t_format *format, va_list *va, s_utils *utils)
         format->data = va;
         start = (char *)to_parse++;
         to_parse = pre_parse(to_parse, format, utils);
-        if (utils->error || !to_parse)
+        if (utils->error || !(*to_parse))
             continue ;
         to_parse = handle_conversion(to_parse, format, utils);
         if (utils->error)

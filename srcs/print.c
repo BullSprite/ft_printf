@@ -276,3 +276,13 @@ t_str print_pointer(t_format *format)
     }
     return (ret);
 }
+
+t_str print_percent(t_format *format)
+{
+	t_str ret;
+
+	ret.str = ft_strnew(1);
+	ret.str[0] = '%';
+	ret.length = 1;
+	return (ret);
+}
