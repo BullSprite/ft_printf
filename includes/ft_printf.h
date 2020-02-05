@@ -39,6 +39,20 @@ typedef struct	s_str
 	char		null_term;
 }				t_str;
 
+typedef struct	s_s {
+	int		count;
+	int		error;
+	char	*first_star;
+	int		only_spaces;
+	char	*temp;
+	char	*start;
+}				t_utils;
+
+typedef struct	s_a {
+	char	*left_part;
+	char	*right_part;
+}				t_print;
+
 int		ft_printf(const char *format, ...);
 t_str 	prescision(int precision, long double num);
 t_str	num_to_str(ULLI num, int size);
