@@ -1,9 +1,29 @@
 #include "../includes/ft_printf.h"
 
+t_str make_float(t_format *format, long double num, char sign)
+{
+	t_str	pre;
+	t_str	str;
+
+	pre = prescision(format->precision, num);
+	if (pre.length > format->precision && (pre.str)[0] == '1')
+	{
+		(pre.str)[0] = '0';
+		num += 1;
+		pre.length--;
+		(pre.str)[pre.length] = 0;
+	}
+	str = num_to_str((ULLI)(num < 0 ? -num : num), 1);
+	str.sign = sign;
+	str.str[str.length - 1] = '.';
+	clean_strjoin_right(&(str.str), 1, pre.str);
+	str.length += pre.length;
+	return (str);
+}
+
 t_str	print_float(t_format *format)
 {
 	long double	num;
-	t_str		pre;
 	t_str		str;
 	char		sign;
 
@@ -23,18 +43,6 @@ t_str	print_float(t_format *format)
 		str.sign = sign;
 		return (str);
 	}
-	pre = prescision(format->precision, num);
-	if (pre.length > format->precision && (pre.str)[0] == '1')
-	{
-		(pre.str)[0] = '0';
-		num += 1;
-		pre.length--;
-		(pre.str)[pre.length] = 0;
-	}
-	str = num_to_str((ULLI)(num < 0 ? -num : num), 1);
-	str.sign = sign;
-	str.str[str.length - 1] = '.';
-	clean_strjoin_right(&(str.str), 1, pre.str);
-	str.length += pre.length;
+	str = make_float(format, num, sign);
 	return (str);
 }
