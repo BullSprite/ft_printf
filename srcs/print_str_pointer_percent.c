@@ -52,13 +52,13 @@ t_str				print_string(t_format *format)
 	{
 		to_print = ft_strnew(1);
 		if (!(to_print[0] = va_arg(*(format->data), int)))
-		ret.null_term = 1;
+			ret.null_term = 1;
 		ret.str = to_print;
 	}
 	else
 	{
 		if (!(to_print = va_arg(*(format->data), char *)))
-		to_print = "(null)";
+			to_print = "(null)";
 		ret.str = ft_strdup(to_print);
 	}
 	handle_str_precision(format, &ret);

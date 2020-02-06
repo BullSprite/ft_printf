@@ -15,11 +15,11 @@
 void	validate_flags1(t_format *format)
 {
 	if ((format->conversion == 'p'
-		 || (ft_strchr("xX", format->conversion)
-			 && format->flags_set & FLAGS_HASH))
-		&& format->precision == -1
-		&& format->flags_set & FLAGS_ZERO
-		&& !(format->flags_set & FLAGS_MINUS))
+	|| (ft_strchr("xX", format->conversion)
+	&& format->flags_set & FLAGS_HASH))
+	&& format->precision == -1
+	&& format->flags_set & FLAGS_ZERO
+	&& !(format->flags_set & FLAGS_MINUS))
 	{
 		format->precision = format->width - 2;
 		format->hex_zero = 1;

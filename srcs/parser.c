@@ -66,8 +66,7 @@ void	handle_error(t_format *format, t_utils *utils, char *to_parse)
 			utils->temp = ft_itoa(format->width);
 			utils->count += ft_strlen(utils->temp);
 			write(1, utils->temp, ft_strlen(utils->temp));
-			write(1, utils->first_star + 1,
-				  to_parse - utils->first_star - 1);
+			write(1, utils->first_star + 1, to_parse - utils->first_star - 1);
 			utils->count += to_parse - utils->start - 1;
 		}
 		else

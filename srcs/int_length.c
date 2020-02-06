@@ -25,7 +25,7 @@ unsigned long long	handle_unsigned_length(t_format *format)
 	else if (ft_strequ(format->length, "hh"))
 		u_n = (unsigned char)va_arg(*(format->data), unsigned int);
 	else
-	u_n = (unsigned long long)va_arg(*(format->data), unsigned int);
+		u_n = (unsigned long long)va_arg(*(format->data), unsigned int);
 	return (u_n);
 }
 
@@ -42,6 +42,6 @@ long long			handle_length(t_format *format)
 	else if (ft_strequ(format->length, "hh"))
 		n = (char)va_arg(*(format->data), int);
 	else
-	n = (long long)va_arg(*(format->data), int);
+		n = (long long)va_arg(*(format->data), int);
 	return (n);
 }
