@@ -76,12 +76,10 @@ int set_base(char c)
 		return (10);
 }
 
-void *handle_unsigned_length(t_format *format)
+unsigned long long handle_unsigned_length(t_format *format)
 {
-	void *ret;
 	unsigned long long u_n;
 
-	ret = ft_memalloc(sizeof(unsigned long long));
 	if (ft_strequ(format->length, "l"))
 		u_n = (unsigned long)va_arg(*(format->data), unsigned long);
 	else if (ft_strequ(format->length, "ll"))
@@ -92,16 +90,13 @@ void *handle_unsigned_length(t_format *format)
 		u_n = (unsigned char)va_arg(*(format->data), unsigned int);
 	else
 		u_n = (unsigned long long)va_arg(*(format->data), unsigned int);
-	ft_memmove(ret, &u_n, sizeof(long long));
-	return (ret);
+	return (u_n);
 }
 
-void *handle_length(t_format *format) // x
+long long   handle_length(t_format *format) // x
 {
-	void *ret;
 	long long n;
 
-	ret = ft_memalloc(sizeof(long long));
 	if (ft_strequ(format->length, "l"))
 		n = (long)va_arg(*(format->data), long);
 	else if (ft_strequ(format->length, "ll"))
@@ -112,8 +107,7 @@ void *handle_length(t_format *format) // x
 		n = (char)va_arg(*(format->data), int);
 	else
 		n = (long long)va_arg(*(format->data), int);
-	ft_memmove(ret, &n, sizeof(long long));
-	return (ret);
+	return (n);
 }
 
 void handle_hex(t_format *format, t_str *in)
@@ -191,7 +185,7 @@ t_str print_unsigned(t_format *format)
 	int base;
 	t_str ret;
 
-	to_print = *(unsigned long long *)handle_unsigned_length(format);
+	to_print = handle_unsigned_length(format);
 	ret.sign = '+';
 	base = set_base(format->conversion);
 	int_to_base(to_print, base, &ret);
@@ -218,7 +212,7 @@ t_str print_int(t_format *format)
 
 	if (ft_strchr("uoxX", format->conversion))
 		return (print_unsigned(format));
-	to_print = *(long long *)handle_length(format);
+	to_print = handle_length(format);
 	ret.sign = to_print >= 0 ? '+' : '-';
 	int_to_base(to_print > 0 ? to_print : -1*to_print, 10, &ret);
 	handle_int_precision(format, &ret);

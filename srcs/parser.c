@@ -186,16 +186,16 @@ void	handle_sign(t_format *format, t_str *str)
 
 void	write_flags(t_print p, t_format *format, t_str ret)
 {
-	write(1, p.left_part, ft_strlen(p.left_part));
+    if (p.left_part)
+		write(1, p.left_part, ft_strlen(p.left_part));
 	if ((ret.null_term) && format->conversion == 'c')
 		write(1, "\0", 1);
-	write(1, p.right_part, ft_strlen(p.right_part));
-	if (format->flags_set & FLAGS_MINUS
-	|| (format->width > -1 && (format->width - ret.length) > 0))
-	{
-		//free(p.right_part);
-		//free(p.left_part);
-	}
+	if (p.right_part)
+		write(1, p.right_part, ft_strlen(p.right_part));
+	if (p.left_part)
+		free(p.left_part);
+	if(p.right_part)
+		free(p.right_part);
 }
 
 int print_flags(t_format *format)
@@ -205,7 +205,7 @@ int print_flags(t_format *format)
 
 	ret = print_conversion(format);
 	p.right_part = ret.str;
-	p.left_part = ft_strnew(0);
+	p.left_part = 0;
 	handle_sign(format, &ret);
 	if (format->flags_set & FLAGS_MINUS)
 	{
@@ -219,10 +219,7 @@ int print_flags(t_format *format)
 									 format->flags_set & FLAGS_ZERO ? '0' : ' '));
 	append_sign(&p, &ret, format);
 	ret.length += (format->width - ret.length) > 0 ? format->width - ret.length : 0;
-	write(1, p.left_part, ft_strlen(p.left_part));
-	if ((ret.null_term) && format->conversion == 'c')
-		write(1, "\0", 1);
-	write(1, p.right_part, ft_strlen(p.right_part));
+	write_flags(p, format, ret);
 	return (ret.length);
 }
 
