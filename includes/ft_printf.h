@@ -22,8 +22,8 @@
 //http://www.cplusplus.com/reference/cstdio/printf/
 
 typedef struct		s_format {
-	long			width;
-	long			precision;
+	long long		width;
+	long long		precision;
 	char			conversion;
 	char			*length;
 	va_list			*data;
@@ -60,7 +60,7 @@ t_str	print_int(t_format *format);
 t_str	print_float(t_format *format);
 t_str	print_string(t_format *format);
 t_str	print_pointer(t_format *format);
-t_str	print_percent(t_format *format);
+t_str	print_percent();
 char	*make_str(long len, char c);
 void	clean_strjoin_left(char **result, int count, ...);
 void	clean_strjoin_right(char **result, int count, ...);

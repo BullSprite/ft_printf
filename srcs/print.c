@@ -40,7 +40,7 @@ void int_to_base(unsigned long long n, char base, t_str *res)
 	len = n == 0 ? 1 : int_len(n, base);
 	res->str = ft_strnew(len);
 	res->length = len;
-	while(n >= base)
+	while(n >= (ULLI)base)
 	{
 		res->str[len - 1] = base_str[n % base];
 		len--;
@@ -170,7 +170,7 @@ void handle_str_precision(t_format *format, t_str *in)
 	}
 	else
 		len = ft_strlen(in->str);
-	if (format->precision < len && format->precision >= 0)
+	if ((ULLI)format->precision < len && format->precision >= 0)
 	{
 		(in->str)[format->precision] = 0;
 		in->length = format->precision;
@@ -271,7 +271,7 @@ t_str print_pointer(t_format *format)
 	return (ret);
 }
 
-t_str print_percent(t_format *format)
+t_str print_percent()
 {
 	t_str ret;
 

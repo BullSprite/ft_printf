@@ -54,7 +54,7 @@ t_str precision(int pre, long double num)
 	num -= (ULLI)num;
 	zero_count = num == 0 ? 0 : leading_zeros(pre, &num);
 	i = -1;
-	if (num != 0 && (dpow = 1))
+	if ((dpow = 1) && num != 0)
 		while (++i < (pre > 19 ? 19 : pre) && (dpow *= 10))
 			if ((ULLI)((num * dpow) + E) == 0)
 				zero_count++;

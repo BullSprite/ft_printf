@@ -103,7 +103,7 @@ t_str	print_conversion(t_format *format)
 	else if (format->conversion == 'f')
 		res = print_float(format);
 	else if (format->conversion == '%')
-		res = print_percent(format);
+		res = print_percent();
 	return (res);
 }
 
