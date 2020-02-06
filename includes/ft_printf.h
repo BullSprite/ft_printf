@@ -19,8 +19,6 @@
 # define ULLI				unsigned long long int
 # define LLI				long long int
 
-//http://www.cplusplus.com/reference/cstdio/printf/
-
 typedef struct		s_format {
 	long long		width;
 	long long		precision;
@@ -54,6 +52,15 @@ typedef struct	s_a {
 }				t_print;
 
 int		ft_printf(const char *format, ...);
+void	handle_sign(t_format *format, t_str *str);
+char	*handle_flag(char *c, t_format *format);
+int		print_flags(t_format *format);
+char	*handle_width(char *c, t_format *format, t_utils *s);
+char	*handle_precision(char *c, t_format *format, t_utils *s);
+char	*handle_conversion(char *c, t_format *format, t_utils *s);
+void	validate_flags(t_format *format);
+void	validate_flags1(t_format *format);
+int		parse(char *to_parse, t_format *format, va_list *va, t_utils *utils);
 t_str 	precision(int pre, long double num);
 t_str	num_to_str(ULLI num, int size);
 t_str	print_int(t_format *format);
@@ -65,4 +72,6 @@ char	*make_str(long len, char c);
 void	clean_strjoin_left(char **result, int count, ...);
 void	clean_strjoin_right(char **result, int count, ...);
 void	to_lower_str(char *str);
+void	clear_format(t_format *f);
+int		print_flags(t_format *format);
 #endif

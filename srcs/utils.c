@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pkathy <marvin@42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/06 17:25:58 by pkathy            #+#    #+#             */
-/*   Updated: 2020/02/06 17:26:07 by pkathy           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 
@@ -78,4 +67,21 @@ void	to_lower_str(char *str)
 			*str += 'a' - 'A';
 		(str)++;
 	}
+}
+
+void	clear_format(t_format *f)
+{
+	f->width = -1;
+	f->precision = -1;
+	if (f->length)
+	{
+		free(f->length);
+		f->length = 0;
+	}
+	else
+		f->length = 0;
+	f->flags_set = 0;
+	f->data = NULL;
+	f->conversion = 0;
+	f->hex_zero = 0;
 }

@@ -123,7 +123,7 @@ void				handle_hex(t_format *format, t_str *in)
 		format->precision += 2;
 }
 
-int 				handle_int_precision1(t_format *format, t_str *in)
+int					handle_int_precision1(t_format *format, t_str *in)
 {
 	if (format->conversion == 'o' && (format->flags_set & FLAGS_HASH))
 	{
@@ -135,14 +135,14 @@ int 				handle_int_precision1(t_format *format, t_str *in)
 		else
 		{
 			clean_strjoin_left(&(in->str), 1,
-							   make_str(1, '0'));
+					make_str(1, '0'));
 			in->length += 1;
 		}
 	}
 	if ((format->precision) > (in->length))
 	{
 		clean_strjoin_left(&(in->str), 1,
-						   make_str(format->precision - in->length, '0'));
+				make_str(format->precision - in->length, '0'));
 		in->length += format->precision - in->length;
 	}
 	return (format->conversion == 'o' ? 0 : 1);
