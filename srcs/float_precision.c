@@ -35,6 +35,8 @@ int		leading_zeros(int pre, long double *num)
 	int zero_count;
 	int	i;
 
+	if (pre > 20)
+		return (0);
 	zero_count = 0;
 	i = -1;
 	while (pre - (++i) > 19)

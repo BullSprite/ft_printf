@@ -1,8 +1,10 @@
 NAME=libftprintf.a
 
 SRCS_PATH=./srcs/
-SRCS_FILES=parser.c precision.c print.c typeFloat.c utils.c validators.c\
-			flags.c ft_printf.c handlers.c
+SRCS_FILES=parser.c float_precision.c print_int.c print_float.c utils.c\
+			int_length.c int_precision.c flags.c ft_printf.c handlers.c\
+			print_str_pointer_percent.c str_precision.c validators.c\
+
 SRCS=$(addprefix $(SRCS_PATH), $(SRCS_FILES))
 
 LIB_SRCS_PATH=./libft/

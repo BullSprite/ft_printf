@@ -102,7 +102,7 @@ int		print_flags(t_format *format)
 	else if (format->width > -1 && (format->width - ret.length) > 0)
 		clean_strjoin_right(&(p.left_part), 1,
 							make_str(format->width - ret.length,
-									 format->flags_set & FLAGS_ZERO ? '0' : ' '));
+								format->flags_set & FLAGS_ZERO ? '0' : ' '));
 	append_sign(&p, &ret, format);
 	ret.length +=
 			(format->width - ret.length) > 0 ? format->width - ret.length : 0;
