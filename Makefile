@@ -70,6 +70,7 @@ clean:
 
 fclean: clean
 	@rm -fv $(NAME) > /dev/null
+	@rm -f ./libft/libft.a
 
 re: fclean all
 

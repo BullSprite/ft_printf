@@ -34,7 +34,7 @@ void				int_to_base(unsigned long long n, char base, t_str *res)
 	len = n == 0 ? 1 : int_len(n, base);
 	res->str = ft_strnew(len);
 	res->length = len;
-	while (n >= (ULLI)base)
+	while (n >= (t_ulli)base)
 	{
 		res->str[len - 1] = base_str[n % base];
 		len--;

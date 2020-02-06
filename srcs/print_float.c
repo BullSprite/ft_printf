@@ -25,7 +25,7 @@ t_str	make_float(t_format *format, long double num, char sign)
 		pre.length--;
 		(pre.str)[pre.length] = 0;
 	}
-	str = num_to_str((ULLI)(num < 0 ? -num : num), 1);
+	str = num_to_str((t_ulli)(num < 0 ? -num : num), 1);
 	str.sign = sign;
 	str.str[str.length - 1] = '.';
 	clean_strjoin_right(&(str.str), 1, pre.str);

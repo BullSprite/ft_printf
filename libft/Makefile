@@ -44,12 +44,13 @@ INCLUDES=./
 
 all: $(NAME)
 
-$(NAME): $(SRCS) $(OBJECTS) libft.h
+$(NAME): $(SRCS) libft.h
+	@gcc -Wall -Wextra -Werror -I$(INCLUDES) -c $(SRCS)
 	@ar rc $(NAME) $(OBJECTS)
 	@ranlib $(NAME)
 
 $(OBJECTS): %.o : %.c
-	@gcc -Wall -Werror -Wextra -I$(INCLUDES) -c $<
+	@gcc -Wall -Wextra -Werror -I$(INCLUDES) -c $<
 
 clean:
 	@/bin/rm -f $(OBJECTS)
