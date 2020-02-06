@@ -170,7 +170,7 @@ void handle_str_precision(t_format *format, t_str *in)
 	}
 	else
 		len = ft_strlen(in->str);
-	if ((ULLI)format->precision < len && format->precision >= 0)
+	if (format->precision >= 0 && (ULLI)format->precision < len)
 	{
 		(in->str)[format->precision] = 0;
 		in->length = format->precision;
