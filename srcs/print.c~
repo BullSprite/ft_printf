@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   print.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pkathy <marvin@42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/02/06 17:27:36 by pkathy            #+#    #+#             */
-/*   Updated: 2020/02/06 17:27:39 by pkathy           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/ft_printf.h"
 
-unsigned long long	int_len(unsigned long long n, int base)
+unsigned long long int_len(unsigned long long n, int base)
 {
 	unsigned long long len;
 
@@ -25,7 +13,7 @@ unsigned long long	int_len(unsigned long long n, int base)
 	return (len);
 }
 
-size_t				pointer_len(size_t n)
+size_t pointer_len(size_t n)
 {
 	size_t len;
 
@@ -38,16 +26,16 @@ size_t				pointer_len(size_t n)
 	return (len);
 }
 
-void				int_to_base(unsigned long long n, char base, t_str *res)
+void int_to_base(unsigned long long n, char base, t_str *res)
 {
-	size_t	len;
-	char	*base_str;
+	size_t len;
+	char *base_str;
 
 	base_str = "0123456789ABCDEF";
 	len = n == 0 ? 1 : int_len(n, base);
 	res->str = ft_strnew(len);
 	res->length = len;
-	while (n >= (ULLI)base)
+	while(n >= (ULLI)base)
 	{
 		res->str[len - 1] = base_str[n % base];
 		len--;
@@ -56,16 +44,16 @@ void				int_to_base(unsigned long long n, char base, t_str *res)
 	res->str[len - 1] = base_str[n % base];
 }
 
-void				pointer_to_str(size_t n, t_str *res)
+void pointer_to_str(size_t n, t_str *res)
 {
-	size_t	len;
-	char	*base_str;
+	size_t len;
+	char *base_str;
 
 	base_str = "0123456789abcdef";
 	len = pointer_len(n);
 	res->str = ft_strnew(len);
 	res->length = len;
-	while (n > 0)
+	while(n > 0)
 	{
 		res->str[len - 1] = base_str[n % 16];
 		len--;
@@ -73,7 +61,7 @@ void				pointer_to_str(size_t n, t_str *res)
 	}
 }
 
-int					set_base(char c)
+int set_base(char c)
 {
 	if (c == 'x' || c == 'X')
 		return (16);
@@ -83,9 +71,9 @@ int					set_base(char c)
 		return (10);
 }
 
-unsigned long long	handle_unsigned_length(t_format *format)
+unsigned long long handle_unsigned_length(t_format *format)
 {
-	unsigned long long	u_n;
+	unsigned long long u_n;
 
 	if (ft_strequ(format->length, "l"))
 		u_n = (unsigned long)va_arg(*(format->data), unsigned long);
@@ -100,9 +88,9 @@ unsigned long long	handle_unsigned_length(t_format *format)
 	return (u_n);
 }
 
-long long			handle_length(t_format *format)
+long long   handle_length(t_format *format) // x
 {
-	long long	n;
+	long long n;
 
 	if (ft_strequ(format->length, "l"))
 		n = (long)va_arg(*(format->data), long);
@@ -117,14 +105,29 @@ long long			handle_length(t_format *format)
 	return (n);
 }
 
-void				handle_hex(t_format *format, t_str *in)
+void handle_hex(t_format *format, t_str *in)
 {
 	if ((in->str[0]) == '0' && format->hex_zero)
 		format->precision += 2;
 }
 
-int 				handle_int_precision1(t_format *format, t_str *in)
+int handle_int_precision(t_format *format, t_str *in)
 {
+	handle_hex(format, in);
+	if (!(format->precision) && (in->str[0]) == '0')
+	{
+		in->length = 0;
+		free(in->str);
+
+		if (!(in->str = ft_strnew(1)))
+			return (0);
+		if (format->conversion == 'o' && format->flags_set & FLAGS_HASH)
+		{
+			in->length = 1;
+			in->str[0] = '0';
+		}
+		return (0);
+	}
 	if (format->conversion == 'o' && (format->flags_set & FLAGS_HASH))
 	{
 		if ((in->str[0]) == '0')
@@ -139,6 +142,7 @@ int 				handle_int_precision1(t_format *format, t_str *in)
 			in->length += 1;
 		}
 	}
+
 	if ((format->precision) > (in->length))
 	{
 		clean_strjoin_left(&(in->str), 1,
@@ -148,28 +152,9 @@ int 				handle_int_precision1(t_format *format, t_str *in)
 	return (format->conversion == 'o' ? 0 : 1);
 }
 
-int					handle_int_precision(t_format *format, t_str *in)
+void handle_str_precision(t_format *format, t_str *in)
 {
-	handle_hex(format, in);
-	if (!(format->precision) && (in->str[0]) == '0')
-	{
-		in->length = 0;
-		free(in->str);
-		if (!(in->str = ft_strnew(1)))
-			return (0);
-		if (format->conversion == 'o' && format->flags_set & FLAGS_HASH)
-		{
-			in->length = 1;
-			in->str[0] = '0';
-		}
-		return (0);
-	}
-	return (handle_int_precision1(format, in));
-}
-
-void				handle_str_precision(t_format *format, t_str *in)
-{
-	size_t	len;
+	size_t len;
 
 	if (format->conversion == 'c')
 	{
@@ -189,11 +174,11 @@ void				handle_str_precision(t_format *format, t_str *in)
 		in->length = len;
 }
 
-t_str				print_unsigned(t_format *format)
+t_str print_unsigned(t_format *format)
 {
-	unsigned long long	to_print;
-	int					base;
-	t_str				ret;
+	unsigned long long to_print;
+	int base;
+	t_str ret;
 
 	to_print = handle_unsigned_length(format);
 	ret.sign = '+';
@@ -206,35 +191,33 @@ t_str				print_unsigned(t_format *format)
 	else
 	{
 		handle_int_precision(format, &ret);
-		if (format->flags_set & FLAGS_HASH && ft_strchr("xX",
-				format->conversion))
+		if (format->flags_set & FLAGS_HASH && ft_strchr("xX", format->conversion))
 		{
-			clean_strjoin_left(&(ret.str),
-					1, ft_strdup(format->conversion == 'x' ? "0x" : "0X"));
+			clean_strjoin_left(&(ret.str), 1, ft_strdup(format->conversion == 'x' ? "0x" : "0X"));
 			ret.length += 2;
 		}
 	}
 	return (ret);
 }
 
-t_str				print_int(t_format *format)
+t_str print_int(t_format *format)
 {
-	long long	to_print;
-	t_str		ret;
+	long long to_print;
+	t_str ret;
 
 	if (ft_strchr("uoxX", format->conversion))
 		return (print_unsigned(format));
 	to_print = handle_length(format);
 	ret.sign = to_print >= 0 ? '+' : '-';
-	int_to_base(to_print > 0 ? to_print : -1 * to_print, 10, &ret);
+	int_to_base(to_print > 0 ? to_print : -1*to_print, 10, &ret);
 	handle_int_precision(format, &ret);
 	return (ret);
 }
 
-t_str				print_string(t_format *format)
+t_str print_string(t_format *format)
 {
-	char	*to_print;
-	t_str	ret;
+	char *to_print;
+	t_str ret;
 
 	ret.null_term = 0;
 	if (format->conversion == 'c')
@@ -254,10 +237,10 @@ t_str				print_string(t_format *format)
 	return (ret);
 }
 
-t_str				print_pointer(t_format *format)
+t_str print_pointer(t_format *format)
 {
-	size_t	to_print;
-	t_str	ret;
+	size_t to_print;
+	t_str ret;
 
 	if (!(to_print = va_arg(*(format->data), size_t)))
 	{
@@ -283,9 +266,9 @@ t_str				print_pointer(t_format *format)
 	return (ret);
 }
 
-t_str				print_percent(void)
+t_str print_percent()
 {
-	t_str	ret;
+	t_str ret;
 
 	ret.str = ft_strnew(1);
 	ret.str[0] = '%';
