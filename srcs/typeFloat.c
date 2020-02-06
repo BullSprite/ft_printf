@@ -5,7 +5,7 @@ t_str make_float(t_format *format, long double num, char sign)
 	t_str	pre;
 	t_str	str;
 
-	pre = prescision(format->precision, num);
+	pre = precision(format->precision, num);
 	if (pre.length > format->precision && (pre.str)[0] == '1')
 	{
 		(pre.str)[0] = '0';
