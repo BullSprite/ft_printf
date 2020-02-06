@@ -1,7 +1,7 @@
 NAME=libftprintf.a
 
 SRCS_PATH=./srcs/
-SRCS_FILES=parser.c precision.c print.c typeFloat.c utils.c width.c
+SRCS_FILES=parser.c precision.c print.c typeFloat.c utils.c
 SRCS=$(addprefix $(SRCS_PATH), $(SRCS_FILES))
 
 LIB_SRCS_PATH=./libft/
@@ -29,7 +29,7 @@ OBJECTS_PATH=./objs/
 OBJECTS_FILES=$(SRCS_FILES:.c=.o)
 OBJECTS=$(addprefix $(OBJECTS_PATH), $(OBJECTS_FILES))
 
-COMPILE=gcc #-Wall -Wextra -Werror
+COMPILE=gcc -Wall -Wextra -Werror
 
 INCLUDES=-I./includes -I./libs/libft
 HEADERS_PATH=./includes/
