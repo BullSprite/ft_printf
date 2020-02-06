@@ -16,7 +16,13 @@ void	clear_format(t_format *f)
 {
 	f->width = -1;
 	f->precision = -1;
-	f->length = 0;
+	if (f->length)
+	{
+		free(f->length);
+		f->length = 0;
+	}
+	else
+		f->length = 0;
 	f->flags_set = 0;
 	f->data = NULL;
 	f->conversion = 0;
@@ -357,6 +363,7 @@ int		ft_printf(const char *format, ...)
 
 	utils.count = 0;
 	utils.error = 0;
+	f.length = 0;
 	clear_format(&f);
 	va_start(va, format);
 	if (ft_strnlen(format, 2) == 1 && *format == '%')
