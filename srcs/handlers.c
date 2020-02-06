@@ -84,9 +84,9 @@ char	*handle_conversion(char *c, t_format *format, t_utils *s)
 
 	start = c;
 	len = 0;
-	if (strchr("lhL", *c))
+	if (ft_strchr("lhL", *c))
 	{
-		while (strchr("lhL", *c))
+		while (ft_strchr("lhL", *c))
 			++c;
 		len = ft_strnew(c - start);
 		ft_strncpy(len, start, c - start);

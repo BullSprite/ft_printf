@@ -1,8 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   float_precision.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swynona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/06 19:13:43 by swynona           #+#    #+#             */
+/*   Updated: 2020/02/06 19:13:46 by swynona          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_printf.h"
 
-#define E 0.00000003
-
-t_str num_to_str(ULLI num, int size)
+t_str	num_to_str(ULLI num, int size)
 {
 	t_str	str;
 	size_t	i;
@@ -40,12 +50,12 @@ int		leading_zeros(int pre, long double *num)
 	zero_count = 0;
 	i = -1;
 	while (pre - (++i) > 19)
-		if ((ULLI) (((*num) *= 10) + E) == 0)
+		if ((ULLI)(((*num) *= 10) + 0.00000003) == 0)
 			zero_count++;
 	return (zero_count);
 }
 
-t_str precision(int pre, long double num)
+t_str	precision(int pre, long double num)
 {
 	int		i;
 	ULLI	res;
@@ -58,7 +68,7 @@ t_str precision(int pre, long double num)
 	i = -1;
 	if ((dpow = 1) && num != 0)
 		while (++i < (pre > 19 ? 19 : pre) && (dpow *= 10))
-			if ((ULLI)((num * dpow) + E) == 0)
+			if ((ULLI)((num * dpow) + 0.00000003) == 0)
 				zero_count++;
 	res = (ULLI)(num * dpow + 0.5);
 	str = num_to_str(res, 0);
@@ -71,5 +81,5 @@ t_str precision(int pre, long double num)
 		clean_strjoin_right(&(str.str), 1, make_str(pre - str.length, '0'));
 	if (str.length < pre)
 		str.length = pre;
-	return(str);
+	return (str);
 }

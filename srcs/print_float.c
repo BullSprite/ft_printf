@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_float.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: swynona <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/06 19:15:33 by swynona           #+#    #+#             */
+/*   Updated: 2020/02/06 19:15:34 by swynona          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_printf.h"
 
-t_str make_float(t_format *format, long double num, char sign)
+t_str	make_float(t_format *format, long double num, char sign)
 {
 	t_str	pre;
 	t_str	str;
